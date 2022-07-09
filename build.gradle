@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+// add
+mainClassName = 'COM.Example.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    // implementation 'com.google.code.gson:gson:2.9.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    // applicationDefaultJvmArgs = ['-Dcom.sun.javafx.experimental.embedded.3d=true', '-Dprism.glDepthSize=24']
+}
