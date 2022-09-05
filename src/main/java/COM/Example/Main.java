@@ -13,6 +13,11 @@ import java.net.DatagramPacket;
 public class Main {
     public static void main(String[] args) throws InterruptedException, IOException {
 
+        if (args.length == 0) {
+            System.err.println("Please provide an argument for the execution mode");
+            System.exit(0);
+        }
+
         switch (args[0]) {
             case "-s" -> {
                 Thread serverThread = new Thread(new UDPServer(8080));
@@ -34,7 +39,7 @@ public class Main {
 
                 // Convert the received message from a byte array to a message object.
                 message = Message.readFromBytes(answer.getData());
-                System.out.println("Received answer: " + message.getMessageType() + " " + message.getPayload());
+                System.out.println("Received answer: " + "type = " + message.getMessageType() + " & content = '" + message.getPayload() + "'");
                 System.out.println("Client 1 done");
             }
             default -> System.out.println("Provided parameter was not found!\n " +

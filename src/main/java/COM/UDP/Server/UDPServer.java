@@ -3,6 +3,7 @@ package COM.UDP.Server;
 import COM.Format.Message;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -23,7 +24,7 @@ public class UDPServer implements Runnable{
     /**
      * Manages the servers accepter thread and listens for a termination message to shut everything down.
      */
-    private void processManager() {
+    private void processManager() throws InterruptedException {
         Scanner scanner = new Scanner(System.in);
 
         // Create thread to handle incoming messages
@@ -63,9 +64,15 @@ public class UDPServer implements Runnable{
 
         // Create loop to handle incoming messages
         while (!Thread.interrupted()) {
-            handler();
+            try {
+                handler();
+            } catch (RuntimeException e) {
+                if (!(e.getCause() instanceof SocketException)) {
+                    System.err.println(e.getMessage());
+                }
+            }
 
-            if (serverSocket.isClosed() && Thread.interrupted()) {
+            if (serverSocket.isClosed() || Thread.interrupted()) {
                 break;
             }
 
@@ -137,8 +144,12 @@ public class UDPServer implements Runnable{
         System.err.println("Starting server...");
 
         // Routine
-        this.createServerSocket(this.port);
-        this.processManager();
+        try {
+            this.createServerSocket(this.port);
+            this.processManager();
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());;
+        }
 
         System.err.println("Shutting down server...");
     }
