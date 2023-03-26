@@ -18,10 +18,15 @@ public class UDPClient {
         this.connectTo();
     }
 
+    /*
+    --> Use the following constructor if you want to specify a port:
+
     public UDPClient(String address, int port) throws IOException {
         serverAddress = InetAddress.getByName(address);
         this.connectTo(port);
     }
+    */
+
 
     /**
      * Creates a socket to connect to the server.
@@ -43,7 +48,6 @@ public class UDPClient {
      * @throws IOException If the message could not be sent.
      */
     public synchronized DatagramPacket sendPacket(Message msg) throws IOException {
-        // TODO: Maybe no port is needed since we use it in connectTo()?
         byte[] buffer = msg.getBytes();
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, serverAddress, clientSocket.getLocalPort());
         clientSocket.send(packet);

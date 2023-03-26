@@ -9,19 +9,23 @@ public class Message {
 
         int getValue() {
             switch (this) {
-                case MSG_REQUEST:
+                case MSG_REQUEST -> {
                     return 1;
-                case MSG_REPLY:
+                }
+                case MSG_REPLY -> {
                     return 2;
-                case MSG_ERROR:
+                }
+                case MSG_ERROR -> {
                     return 3;
-                default:
+                }
+                default -> {
                     System.err.println("Unknown message type.");
                     return 0;
+                }
             }
         }
 
-        static int getMessageTypeSize() {
+        public static int getMessageTypeSize() {
             return Integer.toString(messageTypes.MSG_ERROR.getValue()).getBytes(StandardCharsets.UTF_8).length;
         }
     }
@@ -44,13 +48,16 @@ public class Message {
 
     public messageTypes getMessageTypeEnum(int type) {
         switch (type) {
-            case 1:
+            case 1 -> {
                 return messageTypes.MSG_REQUEST;
-            case 2:
+            }
+            case 2 -> {
                 return messageTypes.MSG_REPLY;
-            default:
+            }
+            default -> {
                 System.err.println("Unknown message type.");
                 return messageTypes.MSG_ERROR;
+            }
         }
     }
 

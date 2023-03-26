@@ -3,7 +3,6 @@ package COM.UDP.Server;
 import COM.Format.Message;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -148,7 +147,7 @@ public class UDPServer implements Runnable{
             this.createServerSocket(this.port);
             this.processManager();
         } catch (InterruptedException e) {
-            System.err.println(e.getMessage());;
+            System.err.println(e.getMessage());
         }
 
         System.err.println("Shutting down server...");
