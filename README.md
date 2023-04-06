@@ -1,4 +1,4 @@
-# net_server
+# udp_server
 This repository contains an example program for the implementation of a UDP based client and server. Both the client and the server communicate using a simple message format. Simple tests for checking the source code are included under src/test/java/.
 
 ## Usage
