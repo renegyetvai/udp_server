@@ -6,40 +6,21 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 
 public class UDPClient {
 
+    private final static int UDP_BUFFER_SIZE = 512;
     private final InetAddress serverAddress;
-    private DatagramSocket clientSocket;
-
-    public UDPClient(String address) throws IOException {
-        serverAddress = InetAddress.getByName(address);
-        this.connectTo();
-    }
+    private final int port;
+    private final DatagramSocket clientSocket;
 
     /*
     --> Use the following constructor if you want to specify a port:
-
-    public UDPClient(String address, int port) throws IOException {
-        serverAddress = InetAddress.getByName(address);
-        this.connectTo(port);
-    }
     */
-
-
-    /**
-     * Creates a socket to connect to the server.
-     * @throws SocketException If the socket could not be created.
-     */
-    private void connectTo(int... port) throws SocketException {
-
-        switch (port.length) {
-            case 0 -> clientSocket = new DatagramSocket();
-            case 1 -> clientSocket = new DatagramSocket(port[0]);
-            default -> throw new IllegalArgumentException("Too many arguments!");
-        }
-        System.err.println("Created client socket.");
+    public UDPClient(String serverAddress, int port) throws IOException {
+        this.serverAddress = InetAddress.getByName(serverAddress);
+        this.port = port;
+        this.clientSocket = new DatagramSocket();
     }
 
     /**
@@ -48,12 +29,14 @@ public class UDPClient {
      * @throws IOException If the message could not be sent.
      */
     public synchronized DatagramPacket sendPacket(Message msg) throws IOException {
-        byte[] buffer = msg.getBytes();
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, serverAddress, clientSocket.getLocalPort());
-        clientSocket.send(packet);
-        packet = new DatagramPacket(buffer, buffer.length);
-        clientSocket.receive(packet);
-        return packet;
+        byte[] sendBuffer = msg.getBytes();
+        DatagramPacket request = new DatagramPacket(sendBuffer, sendBuffer.length, serverAddress, port);
+        clientSocket.send(request);
+
+        byte[] receiveBuffer = new byte[UDP_BUFFER_SIZE];
+        DatagramPacket response = new DatagramPacket(receiveBuffer, receiveBuffer.length);
+        clientSocket.receive(response);
+        return response;
     }
 
     /**

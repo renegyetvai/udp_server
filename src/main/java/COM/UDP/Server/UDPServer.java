@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class UDPServer implements Runnable{
@@ -96,8 +97,11 @@ public class UDPServer implements Runnable{
                 process(packet);
 
                 // Reset packet and send message with type MSG_REPLY back to client
+                packet.setAddress(packet.getAddress());
+                packet.setPort(packet.getPort());
                 packet.setLength(buffer.length);
                 packet.setData(new Message(Message.messageTypes.MSG_REPLY, "reply").getBytes());
+
                 serverSocket.send(packet);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -148,6 +152,8 @@ public class UDPServer implements Runnable{
             this.processManager();
         } catch (InterruptedException e) {
             System.err.println(e.getMessage());
+        } catch (NoSuchElementException e) {
+            System.err.println("CLI not available!");
         }
 
         System.err.println("Shutting down server...");

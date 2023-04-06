@@ -20,7 +20,7 @@ public class Main {
 
         switch (args[0]) {
             case "-s" -> {
-                Thread serverThread = new Thread(new UDPServer(8080));
+                Thread serverThread = new Thread(new UDPServer(8081));
                 System.out.println("Starting server mode");
                 serverThread.start();
                 serverThread.join();
@@ -30,7 +30,7 @@ public class Main {
                 Message message;
 
                 System.out.println("Starting in client mode");
-                UDPClient UDPClient = new UDPClient("localhost");
+                UDPClient UDPClient = new UDPClient("localhost", 8081);
 
                 System.out.println("Sending request message");
                 answer = UDPClient.sendPacket(new Message(Message.messageTypes.MSG_REQUEST, "request"));
